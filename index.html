@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subaleghasri M — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --spring-1: #a8d8a8;
+  --spring-2: #ffd6e0;
+  --spring-3: #b5ead7;
+  --spring-accent: #7ec8a4;
+  --summer-1: #ffe066;
+  --summer-2: #ffb347;
+  --summer-3: #ff6b6b;
+  --summer-accent: #ffd700;
+  --autumn-1: #d4642a;
+  --autumn-2: #e8a040;
+  --autumn-3: #c04b2d;
+  --autumn-accent: #f4a460;
+  --winter-1: #a8c8e8;
+  --winter-2: #d0e8f8;
+  --winter-3: #6699cc;
+  --winter-accent: #88aacc;
+  --bg: #050810;
+  --bg2: #0a0f1e;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+  --text: #e8eaf0;
+  --text-muted: rgba(232,234,240,0.5);
+  --season-color: var(--spring-accent);
+  --season-glow: rgba(126,200,164,0.3);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html{scroll-behavior:smooth;font-size:16px}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Syne',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* CUSTOM CURSOR */
+#cursor{
+  position:fixed;width:12px;height:12px;
+  background:var(--season-color);
+  border-radius:50%;pointer-events:none;z-index:99999;
+  transition:transform 0.15s ease,background 0.5s ease;
+  mix-blend-mode:screen;
+}
+#cursor-trail{
+  position:fixed;width:40px;height:40px;
+  border:1px solid var(--season-color);
+  border-radius:50%;pointer-events:none;z-index:99998;
+  transition:transform 0.4s ease,left 0.12s ease,top 0.12s ease,border-color 0.5s ease;
+  opacity:0.4;
+}
+
+/* LOADING SCREEN */
+#loader{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity 1s ease;
+}
+.loader-name{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,5rem);
+  font-weight:300;letter-spacing:0.3em;color:var(--text);opacity:0;
+  animation:fadeUp 1s 0.5s forwards;
+}
+.loader-bar{
+  width:200px;height:1px;background:rgba(255,255,255,0.1);margin-top:2rem;
+  position:relative;overflow:hidden;
+}
+.loader-bar::after{
+  content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,var(--spring-accent),transparent);
+  animation:loadSlide 1.5s 1s forwards;
+}
+@keyframes loadSlide{to{left:100%}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* SEASON INDICATOR */
+#season-bar{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:1000;
+  background:linear-gradient(90deg,var(--spring-accent) 0%,var(--summer-accent) 33%,var(--autumn-accent) 66%,var(--winter-accent) 100%);
+  transform-origin:left;transform:scaleX(0);transition:transform 0.1s linear;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 3rem;
+  background:rgba(5,8,16,0.8);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--glass-border);
+  transition:all 0.3s ease;
+}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;
+  letter-spacing:0.15em;color:var(--season-color);transition:color 0.5s;
+}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--text-muted);text-decoration:none;transition:color 0.3s;
+}
+.nav-links a:hover{color:var(--season-color)}
+.season-dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--season-color);margin-right:0.4rem;transition:background 0.5s;
+}
+
+/* SECTIONS GENERAL */
+section{
+  min-height:100vh;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:8rem 5vw 5rem;
+}
+
+.section-tag{
+  font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--season-color);margin-bottom:1rem;font-family:'JetBrains Mono',monospace;
+  transition:color 0.5s;
+}
+.section-title{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);
+  font-weight:300;line-height:1.1;margin-bottom:2rem;
+}
+.section-title em{font-style:italic;color:var(--season-color);transition:color 0.5s}
+
+/* ANIMATED BG CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.6}
+
+/* HERO */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  padding:0 8vw;position:relative;z-index:1;
+}
+.hero-season-label{
+  font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+  letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--spring-accent);margin-bottom:2rem;
+  display:flex;align-items:center;gap:0.8rem;opacity:0;
+  animation:fadeUp 0.8s 1.5s forwards;
+}
+.hero-season-label::before{content:'';display:block;width:30px;height:1px;background:var(--spring-accent)}
+.hero-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.5rem,10vw,9rem);
+  font-weight:300;line-height:0.95;letter-spacing:-0.02em;
+  opacity:0;animation:fadeUp 0.8s 1.7s forwards;
+}
+.hero-name span{display:block;font-style:italic;color:var(--spring-accent)}
+.hero-title{
+  font-size:clamp(0.8rem,1.5vw,1rem);letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--text-muted);margin-top:1.5rem;
+  opacity:0;animation:fadeUp 0.8s 1.9s forwards;
+}
+.hero-type{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,2.2rem);
+  font-weight:300;margin-top:0.5rem;min-height:3rem;
+  color:var(--text);opacity:0;animation:fadeUp 0.8s 2.1s forwards;
+}
+.hero-type .cursor-blink{
+  display:inline-block;width:2px;height:1em;background:var(--spring-accent);
+  vertical-align:middle;animation:blink 1s infinite;margin-left:4px;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-tagline{
+  max-width:500px;color:var(--text-muted);line-height:1.8;
+  margin-top:1.5rem;font-size:0.95rem;font-weight:400;
+  opacity:0;animation:fadeUp 0.8s 2.3s forwards;
+}
+.hero-btns{
+  display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.5rem;
+  opacity:0;animation:fadeUp 0.8s 2.5s forwards;
+}
+.btn{
+  padding:0.9rem 2rem;font-size:0.75rem;letter-spacing:0.15em;
+  text-transform:uppercase;border-radius:2px;text-decoration:none;
+  font-family:'Syne',sans-serif;font-weight:600;cursor:none;
+  transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;
+}
+.btn-primary{
+  background:var(--spring-accent);color:#050810;border:1px solid var(--spring-accent);
+}
+.btn-primary:hover{background:transparent;color:var(--spring-accent)}
+.btn-ghost{
+  background:transparent;color:var(--text);border:1px solid var(--glass-border);
+}
+.btn-ghost:hover{border-color:var(--season-color);color:var(--season-color)}
+
+.hero-scroll{
+  position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  opacity:0;animation:fadeUp 0.8s 3s forwards;font-size:0.6rem;
+  letter-spacing:0.3em;text-transform:uppercase;color:var(--text-muted);
+}
+.scroll-line{
+  width:1px;height:60px;background:linear-gradient(to bottom,var(--spring-accent),transparent);
+  animation:scrollDown 2s 3.5s infinite;
+}
+@keyframes scrollDown{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* PETALS / SEASON PARTICLES */
+.particle{
+  position:absolute;pointer-events:none;border-radius:50% 0 50% 0;
+  animation:floatParticle linear infinite;
+  transform-origin:center;
+}
+@keyframes floatParticle{
+  0%{transform:translateY(-10vh) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* GLASS CARDS */
+.glass-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(20px);
+  border-radius:4px;
+  padding:2rem;
+  transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;
+}
+.glass-card:hover{
+  border-color:var(--season-color);
+  transform:translateY(-4px);
+  box-shadow:0 20px 60px var(--season-glow);
+}
+
+/* ABOUT */
+#about{background:var(--bg);z-index:1}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;max-width:1200px}
+.about-text p{line-height:1.9;color:var(--text-muted);margin-bottom:1.2rem;font-size:1rem}
+.about-text p strong{color:var(--text)}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+.stat-item{border-left:2px solid var(--season-color);padding-left:1rem;transition:border-color 0.5s}
+.stat-num{
+  font-family:'Cormorant Garamond',serif;font-size:2.5rem;
+  font-weight:600;line-height:1;color:var(--season-color);transition:color 0.5s;
+}
+.stat-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-top:0.3rem}
+.about-interests{display:flex;flex-wrap:wrap;gap:0.7rem;margin-top:2rem}
+.tag{
+  padding:0.4rem 1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
+  border:1px solid var(--glass-border);border-radius:2px;color:var(--text-muted);
+  transition:all 0.3s;
+}
+.tag:hover{border-color:var(--season-color);color:var(--season-color)}
+
+/* SKILLS */
+#skills{background:var(--bg2);z-index:1}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1400px}
+.skill-category{border:1px solid var(--glass-border);padding:2rem;border-radius:4px;background:var(--glass);transition:border-color 0.3s}
+.skill-category:hover{border-color:var(--season-color)}
+.skill-cat-title{
+  font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--season-color);margin-bottom:1.5rem;font-family:'JetBrains Mono',monospace;
+  transition:color 0.5s;
+}
+.skill-item{margin-bottom:1rem}
+.skill-name{font-size:0.85rem;margin-bottom:0.4rem;display:flex;justify-content:space-between}
+.skill-name span{color:var(--text-muted);font-size:0.7rem;font-family:'JetBrains Mono',monospace}
+.skill-bar{height:2px;background:rgba(255,255,255,0.08);border-radius:1px;overflow:hidden}
+.skill-fill{
+  height:100%;background:var(--season-color);border-radius:1px;width:0;
+  transition:width 1.5s cubic-bezier(0.25,0.46,0.45,0.94),background 0.5s;
+}
+
+/* KNOWLEDGE UNIVERSE */
+#knowledge{background:var(--bg);z-index:1;min-height:100vh;position:relative}
+#constellation-canvas{width:100%;height:500px;display:block;border-radius:4px;border:1px solid var(--glass-border)}
+.knowledge-nodes{
+  display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem;max-width:900px;
+}
+.know-node{
+  padding:0.6rem 1.4rem;border:1px solid var(--glass-border);border-radius:20px;
+  font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;
+  cursor:none;transition:all 0.3s;position:relative;overflow:hidden;
+}
+.know-node::before{
+  content:'';position:absolute;inset:0;
+  background:var(--season-color);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s;z-index:-1;
+}
+.know-node:hover{color:var(--bg);border-color:var(--season-color)}
+.know-node:hover::before{transform:scaleX(1)}
+
+/* PROJECTS */
+#projects{background:var(--bg2);z-index:1}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:2rem;max-width:1400px}
+.project-card{
+  border:1px solid var(--glass-border);border-radius:4px;overflow:hidden;
+  transition:all 0.4s;position:relative;background:var(--glass);
+}
+.project-card:hover{border-color:var(--season-color);transform:translateY(-6px);box-shadow:0 30px 60px var(--season-glow)}
+.project-season{
+  height:4px;
+  background:linear-gradient(90deg,var(--autumn-1),var(--autumn-2));
+}
+.project-body{padding:2rem}
+.project-number{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  letter-spacing:0.2em;color:var(--text-muted);margin-bottom:0.8rem;
+}
+.project-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.8rem;
+  font-weight:600;line-height:1.2;margin-bottom:1rem;
+}
+.project-desc{font-size:0.88rem;line-height:1.8;color:var(--text-muted);margin-bottom:1.5rem}
+.project-techs{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem}
+.tech-tag{
+  font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.3rem 0.7rem;border:1px solid var(--glass-border);border-radius:2px;
+  color:var(--season-color);transition:border-color 0.3s,color 0.5s;
+}
+.project-link{
+  font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--season-color);text-decoration:none;
+  display:inline-flex;align-items:center;gap:0.4rem;
+  transition:gap 0.3s;
+}
+.project-link:hover{gap:0.8rem}
+
+/* ACADEMIC */
+#academic{background:var(--bg);z-index:1}
+.academic-timeline{max-width:800px;position:relative}
+.academic-timeline::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,var(--spring-accent),var(--summer-accent),var(--autumn-accent),var(--winter-accent));
+}
+.academic-item{
+  padding:0 0 3rem 3rem;position:relative;
+}
+.academic-item::before{
+  content:'';position:absolute;left:-5px;top:6px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--season-color);border:2px solid var(--bg);
+  transition:background 0.5s;
+}
+.academic-year{
+  font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+  letter-spacing:0.2em;color:var(--season-color);margin-bottom:0.5rem;
+  transition:color 0.5s;
+}
+.academic-school{
+  font-family:'Cormorant Garamond',serif;font-size:1.6rem;
+  font-weight:600;margin-bottom:0.3rem;
+}
+.academic-detail{font-size:0.85rem;color:var(--text-muted);line-height:1.7}
+.academic-score{
+  display:inline-block;margin-top:0.8rem;
+  padding:0.4rem 1rem;border:1px solid var(--season-color);
+  font-family:'JetBrains Mono',monospace;font-size:0.8rem;
+  color:var(--season-color);border-radius:2px;transition:border-color 0.5s,color 0.5s;
+}
+
+/* JOURNEY TIMELINE */
+#journey{background:var(--bg2);z-index:1}
+.journey-track{
+  display:flex;gap:0;max-width:1200px;position:relative;
+  overflow-x:auto;padding-bottom:1rem;
+}
+.journey-track::before{
+  content:'';position:absolute;top:60px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--spring-accent),var(--summer-accent),var(--autumn-accent),var(--winter-accent));
+}
+.journey-stop{
+  flex:1;min-width:200px;padding:0 1.5rem;text-align:center;
+  position:relative;
+}
+.journey-dot{
+  width:16px;height:16px;border-radius:50%;margin:0 auto 1.5rem;
+  border:2px solid;position:relative;z-index:1;
+  background:var(--bg2);
+}
+.journey-stop:nth-child(1) .journey-dot{border-color:var(--spring-accent)}
+.journey-stop:nth-child(2) .journey-dot{border-color:var(--summer-accent)}
+.journey-stop:nth-child(3) .journey-dot{border-color:var(--autumn-accent)}
+.journey-stop:nth-child(4) .journey-dot{border-color:var(--winter-accent)}
+.journey-year{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  letter-spacing:0.2em;color:var(--text-muted);margin-bottom:0.5rem;
+}
+.journey-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;
+  font-weight:600;margin-bottom:0.5rem;
+}
+.journey-desc{font-size:0.8rem;color:var(--text-muted);line-height:1.7}
+
+/* CERTIFICATIONS */
+#certifications{background:var(--bg);z-index:1}
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;max-width:1400px}
+.cert-card{
+  border:1px solid var(--glass-border);border-radius:4px;overflow:hidden;
+  background:var(--glass);transition:all 0.3s;
+}
+.cert-card:hover{border-color:var(--season-color);transform:translateY(-4px);box-shadow:0 20px 50px var(--season-glow)}
+.cert-top{
+  padding:0.5rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.03);border-bottom:1px solid var(--glass-border);
+}
+.cert-org{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--season-color);transition:color 0.5s}
+.cert-date{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--text-muted)}
+.cert-body{padding:1.5rem}
+.cert-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.4rem;
+  font-weight:600;margin-bottom:0.7rem;line-height:1.3;
+}
+.cert-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.7;margin-bottom:1rem}
+.cert-id{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  color:var(--text-muted);letter-spacing:0.1em;
+}
+.cert-badge{
+  display:inline-block;padding:0.3rem 0.8rem;border-radius:20px;
+  font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;
+  background:rgba(255,215,0,0.15);color:#ffd700;border:1px solid rgba(255,215,0,0.3);
+  margin-bottom:0.5rem;
+}
+
+/* ACHIEVEMENTS */
+#achievements{background:var(--bg2);z-index:1}
+.achieve-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;max-width:1200px}
+.achieve-card{
+  padding:2rem;border:1px solid var(--glass-border);border-radius:4px;
+  background:var(--glass);transition:all 0.3s;text-align:center;
+}
+.achieve-card:hover{border-color:var(--season-color);transform:translateY(-4px)}
+.achieve-icon{font-size:2.5rem;margin-bottom:1rem;display:block}
+.achieve-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:0.5rem}
+.achieve-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.7}
+
+/* CODING PROFILES */
+#profiles{background:var(--bg);z-index:1}
+.profiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem;max-width:1000px}
+.profile-card{
+  padding:2.5rem 2rem;border:1px solid var(--glass-border);border-radius:4px;
+  background:var(--glass);text-align:center;transition:all 0.3s;text-decoration:none;
+  display:block;color:var(--text);
+}
+.profile-card:hover{border-color:var(--season-color);transform:translateY(-6px);box-shadow:0 20px 50px var(--season-glow)}
+.profile-icon{font-size:2.5rem;margin-bottom:1rem;display:block}
+.profile-name{
+  font-family:'Cormorant Garamond',serif;font-size:1.5rem;
+  font-weight:600;margin-bottom:0.5rem;
+}
+.profile-handle{
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  color:var(--season-color);margin-bottom:1rem;transition:color 0.5s;
+}
+.profile-desc{font-size:0.8rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem}
+.profile-btn{
+  display:inline-block;padding:0.6rem 1.5rem;border:1px solid var(--season-color);
+  font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--season-color);border-radius:2px;transition:all 0.3s;
+}
+.profile-card:hover .profile-btn{background:var(--season-color);color:var(--bg)}
+
+/* CONTACT */
+#contact{background:var(--bg2);z-index:1}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;max-width:1000px;align-items:center}
+.contact-intro{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3vw,2.5rem);
+  font-weight:300;line-height:1.4;margin-bottom:2rem;
+}
+.contact-links{display:flex;flex-direction:column;gap:1rem}
+.contact-link{
+  display:flex;align-items:center;gap:1rem;text-decoration:none;
+  padding:1rem 1.5rem;border:1px solid var(--glass-border);border-radius:4px;
+  transition:all 0.3s;color:var(--text);background:var(--glass);
+}
+.contact-link:hover{border-color:var(--season-color);transform:translateX(6px)}
+.contact-link-icon{font-size:1.2rem}
+.contact-link-info{}
+.contact-link-type{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.2rem}
+.contact-link-val{font-size:0.9rem}
+.contact-right{}
+.contact-big-name{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,7rem);
+  font-weight:300;line-height:0.9;letter-spacing:-0.03em;
+  color:rgba(255,255,255,0.06);user-select:none;
+}
+.winter-tagline{
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;
+  font-style:italic;color:var(--winter-accent);margin-top:2rem;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;padding:3rem;
+  border-top:1px solid var(--glass-border);
+  font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--text-muted);background:var(--bg);z-index:1;position:relative;
+}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94),transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  #hero{padding:0 5vw}
+  section{padding:7rem 5vw 4rem}
+  .about-grid{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .contact-right{display:none}
+  .journey-track{flex-wrap:wrap}
+  .journey-stop{min-width:140px}
+}
+
+/* SEASON-SPECIFIC COLORS APPLIED VIA JS */
+body.season-spring{
+  --season-color:var(--spring-accent);
+  --season-glow:rgba(126,200,164,0.25);
+}
+body.season-summer{
+  --season-color:var(--summer-accent);
+  --season-glow:rgba(255,215,0,0.25);
+}
+body.season-autumn{
+  --season-color:var(--autumn-accent);
+  --season-glow:rgba(244,164,96,0.25);
+}
+body.season-winter{
+  --season-color:var(--winter-accent);
+  --season-glow:rgba(136,170,204,0.25);
+}
+
+/* GLITCH EFFECT on name hover */
+.hero-name:hover{
+  animation:glitch 0.3s steps(1) forwards;
+}
+@keyframes glitch{
+  0%{text-shadow:none}
+  20%{text-shadow:-2px 0 var(--summer-3),2px 0 var(--winter-3)}
+  40%{text-shadow:2px 0 var(--summer-accent),-2px 0 var(--autumn-1)}
+  60%{text-shadow:-1px 0 var(--spring-accent),1px 0 var(--winter-accent)}
+  80%{text-shadow:1px 1px var(--autumn-2),-1px -1px var(--spring-1)}
+  100%{text-shadow:none}
+}
+
+/* SNOWFLAKE */
+.snowflake{
+  position:absolute;top:-20px;color:rgba(168,200,232,0.6);
+  font-size:1rem;pointer-events:none;
+  animation:snowfall linear infinite;
+}
+@keyframes snowfall{
+  0%{transform:translateY(0) rotate(0deg);opacity:0}
+  5%{opacity:0.8}
+  95%{opacity:0.8}
+  100%{transform:translateY(110vh) rotate(360deg);opacity:0}
+}
+
+/* LEAF */
+.leaf{
+  position:absolute;top:-20px;pointer-events:none;
+  font-size:1.2rem;
+  animation:leafFall linear infinite;
+}
+@keyframes leafFall{
+  0%{transform:translateX(0) translateY(0) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translateX(100px) translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* SUN RAYS */
+.sunray{
+  position:absolute;background:linear-gradient(to bottom,rgba(255,215,0,0.15),transparent);
+  transform-origin:top center;pointer-events:none;
+  animation:rayPulse ease-in-out infinite;
+}
+@keyframes rayPulse{0%,100%{opacity:0.3}50%{opacity:0.7}}
+
+/* PETAL */
+.petal{
+  position:absolute;pointer-events:none;
+  border-radius:50% 0 50% 0;
+  animation:petalFall linear infinite;
+}
+@keyframes petalFall{
+  0%{transform:translateX(0) translateY(-5vh) rotate(0deg);opacity:0}
+  10%{opacity:0.8}
+  90%{opacity:0.8}
+  100%{transform:translateX(60px) translateY(110vh) rotate(540deg);opacity:0}
+}
+
+/* STAR */
+.star{
+  position:absolute;background:rgba(168,200,232,0.9);
+  border-radius:50%;pointer-events:none;
+  animation:twinkle ease-in-out infinite;
+}
+@keyframes twinkle{0%,100%{opacity:0.2;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+
+/* NAV HAMBURGER */
+.hamburger{
+  display:none;flex-direction:column;gap:5px;cursor:none;
+  background:none;border:none;padding:4px;
+}
+.hamburger span{width:24px;height:1px;background:var(--text);transition:all 0.3s}
+@media(max-width:768px){
+  .hamburger{display:flex}
+  .nav-links.open{
+    display:flex;flex-direction:column;position:fixed;
+    top:60px;right:0;width:200px;padding:2rem;gap:1.5rem;
+    background:rgba(5,8,16,0.97);border-left:1px solid var(--glass-border);
+    height:100vh;
+  }
+}
+</style>
+</head>
+<body class="season-spring">
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<!-- PROGRESS BAR -->
+<div id="season-bar"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-name">Subaleghasri M</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- BACKGROUND CANVAS -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo"><span class="season-dot"></span>SM</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#knowledge">Universe</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#achievements">Awards</a></li>
+    <li><a href="#profiles">Profiles</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ===== HERO — SPRING ===== -->
+<section id="hero">
+  <div id="spring-particles"></div>
+  <div class="hero-season-label">✦ Spring — The Beginning ✦</div>
+  <h1 class="hero-name">Subalegha<span>sri M</span></h1>
+  <div class="hero-title">BE · Electronics & Communication Engineering · Sona College of Technology</div>
+  <div class="hero-type" id="heroType"><span class="cursor-blink"></span></div>
+  <p class="hero-tagline">Motivated and detail-oriented engineering student passionate about bridging the worlds of hardware intelligence and software innovation — from signal processing to smart IoT systems.</p>
+  <div class="hero-btns">
+    <a href="#contact" class="btn btn-primary">Contact Me ↗</a>
+    <a href="#about" class="btn btn-ghost">Explore Journey →</a>
+    <a href="mailto:subaleghasri21@gmail.com" class="btn btn-ghost" id="downloadBtn">Download Resume ↓</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ===== ABOUT — SPRING ===== -->
+<section id="about">
+  <div class="section-tag reveal">✦ Spring · Introduction</div>
+  <h2 class="section-title reveal">Who <em>I Am</em></h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>Hello! I'm <strong>Subaleghasri M</strong>, a first-year <strong>B.E. Electronics and Communication Engineering</strong> student at <strong>Sona College of Technology</strong> — curious by nature, driven by purpose.</p>
+      <p>My journey started with a love for understanding how things work — from the flow of electrons in a circuit to the flow of data in a network. I believe technology is most meaningful when it solves real human problems, and that's what keeps me motivated every day.</p>
+      <p>Outside academics, I explore programming, participate in workshops across premier institutions, and continuously build on my knowledge in emerging technologies like IoT and data science.</p>
+      <p><strong>Career Objective:</strong> To apply technical knowledge and problem-solving skills in a challenging environment while gaining practical experience and contributing to organizational growth.</p>
+      <div class="about-interests">
+        <span class="tag">IoT</span>
+        <span class="tag">Embedded Systems</span>
+        <span class="tag">Data Science</span>
+        <span class="tag">Signal Processing</span>
+        <span class="tag">Python</span>
+        <span class="tag">Design Thinking</span>
+        <span class="tag">Networking</span>
+        <span class="tag">VLSI</span>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-num" data-count="8.52">0</div>
+          <div class="stat-label">Current CGPA</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-count="93.5">0</div>
+          <div class="stat-label">HSC Percentage</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-count="5">0</div>
+          <div class="stat-label">Certifications</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-count="4">0</div>
+          <div class="stat-label">Languages Known</div>
+        </div>
+      </div>
+      <div class="glass-card" style="margin-top:1.5rem">
+        <div class="section-tag" style="margin:0 0 0.5rem">Languages</div>
+        <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.8">
+          🗣 Tamil (Native) &nbsp;·&nbsp; English (Fluent)<br>
+          🌍 Telugu &nbsp;·&nbsp; French
+        </p>
+      </div>
+      <div class="glass-card" style="margin-top:1rem">
+        <div class="section-tag" style="margin:0 0 0.5rem">Contact</div>
+        <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.8">
+          📧 subaleghasri21@gmail.com<br>
+          📱 9626605765<br>
+          📍 Trichy, Tamil Nadu
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SKILLS — SUMMER ===== -->
+<section id="skills">
+  <div id="summer-particles"></div>
+  <div class="section-tag reveal">☀ Summer · Learning Journey</div>
+  <h2 class="section-title reveal">My <em>Skills</em></h2>
+  <div class="skills-grid">
+    <div class="skill-category reveal">
+      <div class="skill-cat-title">Programming Languages</div>
+      <div class="skill-item"><div class="skill-name">Python <span>Intermediate</span></div><div class="skill-bar"><div class="skill-fill" data-width="70"></div></div></div>
+      <div class="skill-item"><div class="skill-name">C++ <span>Intermediate</span></div><div class="skill-bar"><div class="skill-fill" data-width="60"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Data Structures <span>Basics</span></div><div class="skill-bar"><div class="skill-fill" data-width="50"></div></div></div>
+    </div>
+    <div class="skill-category reveal reveal-delay-1">
+      <div class="skill-cat-title">Core ECE Subjects</div>
+      <div class="skill-item"><div class="skill-name">Digital Electronics <span>Good</span></div><div class="skill-bar"><div class="skill-fill" data-width="75"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Signal Processing <span>Good</span></div><div class="skill-bar"><div class="skill-fill" data-width="70"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Communication Systems <span>Good</span></div><div class="skill-bar"><div class="skill-fill" data-width="72"></div></div></div>
+      <div class="skill-item"><div class="skill-name">IoT Systems <span>Good</span></div><div class="skill-bar"><div class="skill-fill" data-width="70"></div></div></div>
+    </div>
+    <div class="skill-category reveal reveal-delay-2">
+      <div class="skill-cat-title">Technology & Tools</div>
+      <div class="skill-item"><div class="skill-name">IoT (LoRaWAN) <span>Trained</span></div><div class="skill-bar"><div class="skill-fill" data-width="65"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Data Processing <span>Certified</span></div><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Antenna Design <span>Workshop</span></div><div class="skill-bar"><div class="skill-fill" data-width="55"></div></div></div>
+    </div>
+    <div class="skill-category reveal reveal-delay-3">
+      <div class="skill-cat-title">Soft Skills</div>
+      <div class="skill-item"><div class="skill-name">Teamwork <span>★★★★★</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Leadership <span>★★★★</span></div><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Communication <span>★★★★★</span></div><div class="skill-bar"><div class="skill-fill" data-width="88"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Critical Thinking <span>★★★★</span></div><div class="skill-bar"><div class="skill-fill" data-width="82"></div></div></div>
+      <div class="skill-item"><div class="skill-name">Time Management <span>★★★★</span></div><div class="skill-bar"><div class="skill-fill" data-width="78"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== KNOWLEDGE UNIVERSE ===== -->
+<section id="knowledge">
+  <div class="section-tag reveal">✦ Knowledge Universe</div>
+  <h2 class="section-title reveal">The <em>Constellation</em><br>of Knowledge</h2>
+  <canvas id="constellation-canvas" class="reveal"></canvas>
+  <div class="knowledge-nodes reveal reveal-delay-2">
+    <div class="know-node">Programming</div>
+    <div class="know-node">Data Structures</div>
+    <div class="know-node">DBMS</div>
+    <div class="know-node">Networking</div>
+    <div class="know-node">Digital Communication</div>
+    <div class="know-node">Signal Processing</div>
+    <div class="know-node">Electronics</div>
+    <div class="know-node">Embedded Systems</div>
+    <div class="know-node">IoT</div>
+    <div class="know-node">Design Thinking</div>
+    <div class="know-node">Data Visualisation</div>
+    <div class="know-node">Problem Solving</div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS — AUTUMN ===== -->
+<section id="projects">
+  <div id="autumn-particles"></div>
+  <div class="section-tag reveal">🍂 Autumn · Achievements</div>
+  <h2 class="section-title reveal">Featured <em>Projects</em></h2>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-season" style="background:linear-gradient(90deg,#d4642a,#e8a040)"></div>
+      <div class="project-body">
+        <div class="project-number">PROJECT — 01</div>
+        <div class="project-title">Footstep Energy Generation</div>
+        <p class="project-desc">An innovative prototype that harvests kinetic energy from human footsteps and converts it into usable electrical energy. Selected to present at ISMART 2026 national innovation event. The system uses piezoelectric transducers placed under floor tiles to generate voltage from pressure.</p>
+        <div class="project-techs">
+          <span class="tech-tag">Piezoelectric Sensors</span>
+          <span class="tech-tag">Energy Harvesting</span>
+          <span class="tech-tag">Embedded Systems</span>
+          <span class="tech-tag">Circuit Design</span>
+        </div>
+        <span style="color:var(--autumn-accent);font-size:0.75rem;font-family:'JetBrains Mono',monospace">★ ISMART 2026 Presentation</span>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-season" style="background:linear-gradient(90deg,#6699cc,#a8c8e8)"></div>
+      <div class="project-body">
+        <div class="project-number">PROJECT — 02</div>
+        <div class="project-title">Bluetooth Antenna IoT Study</div>
+        <p class="project-desc">Participated in an intensive national workshop at VIT Vellore on Design, Fabrication and Characterization of Printed Bluetooth Antennas for IoT Applications. Gained hands-on experience in PCB antenna design, simulation, and RF characterization methodologies.</p>
+        <div class="project-techs">
+          <span class="tech-tag">Antenna Design</span>
+          <span class="tech-tag">Bluetooth</span>
+          <span class="tech-tag">IoT</span>
+          <span class="tech-tag">RF Engineering</span>
+          <span class="tech-tag">PCB Design</span>
+        </div>
+        <span style="color:var(--winter-accent);font-size:0.75rem;font-family:'JetBrains Mono',monospace">★ VIT National Workshop</span>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-season" style="background:linear-gradient(90deg,#ffd700,#ffb347)"></div>
+      <div class="project-body">
+        <div class="project-number">PROJECT — 03</div>
+        <div class="project-title">IoT with LoRaWAN Technology</div>
+        <p class="project-desc">Explored and implemented Internet of Things solutions using LoRaWAN (Long Range Wide Area Network) low-power wireless communication protocol at Sona College of Technology workshop. Built prototype sensors for long-range, low-power data transmission scenarios.</p>
+        <div class="project-techs">
+          <span class="tech-tag">LoRaWAN</span>
+          <span class="tech-tag">IoT</span>
+          <span class="tech-tag">Wireless Comm</span>
+          <span class="tech-tag">Sensor Networks</span>
+        </div>
+        <span style="color:var(--summer-accent);font-size:0.75rem;font-family:'JetBrains Mono',monospace">★ Sona College Workshop</span>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-3">
+      <div class="project-season" style="background:linear-gradient(90deg,#7ec8a4,#a8d8a8)"></div>
+      <div class="project-body">
+        <div class="project-number">PROJECT — 04</div>
+        <div class="project-title">Data Processing & Visualisation</div>
+        <p class="project-desc">Completed a certified course in Data Processing and Visualisation through NASSCOM FutureSkills Prime, covering data cleaning, transformation, and visual storytelling techniques. Applied data analytics concepts aligned with industry competency standards.</p>
+        <div class="project-techs">
+          <span class="tech-tag">Data Analytics</span>
+          <span class="tech-tag">Visualisation</span>
+          <span class="tech-tag">Data Cleaning</span>
+          <span class="tech-tag">NASSCOM</span>
+        </div>
+        <span style="color:var(--spring-accent);font-size:0.75rem;font-family:'JetBrains Mono',monospace">★ NASSCOM Certified</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ACADEMIC ===== -->
+<section id="academic">
+  <div class="section-tag reveal">📚 Academic Performance</div>
+  <h2 class="section-title reveal">Academic <em>Journey</em></h2>
+  <div class="academic-timeline reveal reveal-delay-1">
+    <div class="academic-item">
+      <div class="academic-year">2024 – 2028 (Ongoing)</div>
+      <div class="academic-school">Sona College of Technology</div>
+      <div class="academic-detail">
+        Bachelor of Electronics and Communication Engineering<br>
+        Salem, Tamil Nadu
+      </div>
+      <div class="academic-score">CGPA: 8.52 · Top 10 in Department (2025)</div>
+    </div>
+    <div class="academic-item">
+      <div class="academic-year">2016 – 2023</div>
+      <div class="academic-school">Sowdambikaa Matric Secondary School</div>
+      <div class="academic-detail">
+        Standards 6th to 12th<br>
+        Comprehensive schooling with consistent academic excellence
+      </div>
+      <div class="academic-score">Percentage: 93.5%</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== JOURNEY TIMELINE ===== -->
+<section id="journey">
+  <div class="section-tag reveal">🗺 Life Journey</div>
+  <h2 class="section-title reveal">The <em>Four Seasons</em><br>of My Story</h2>
+  <div class="journey-track reveal reveal-delay-1">
+    <div class="journey-stop">
+      <div class="journey-dot"></div>
+      <div class="journey-year">2016 – 2023</div>
+      <div class="journey-title">🌸 Spring</div>
+      <div class="journey-desc">School years at Sowdambikaa Matric. Built academic foundation with 93.5%. Discovered a passion for science and technology.</div>
+    </div>
+    <div class="journey-stop">
+      <div class="journey-dot"></div>
+      <div class="journey-year">2024</div>
+      <div class="journey-title">☀ Summer</div>
+      <div class="journey-desc">Joined Sona College of Technology for B.E. ECE. Began exploring IoT, programming, and digital technologies.</div>
+    </div>
+    <div class="journey-stop">
+      <div class="journey-dot"></div>
+      <div class="journey-year">2025 – 2026</div>
+      <div class="journey-title">🍂 Autumn</div>
+      <div class="journey-desc">Earned 5 certifications. Department Top 10. ISMART 2026 prototype. Workshops at VIT & SONA. PRAGATI internship completed.</div>
+    </div>
+    <div class="journey-stop">
+      <div class="journey-dot"></div>
+      <div class="journey-year">2026 – 2028+</div>
+      <div class="journey-title">❄ Winter</div>
+      <div class="journey-desc">Aspiring to intern at top tech/core companies, contribute to impactful products, and grow into a full-fledged engineer.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CERTIFICATIONS — AUTUMN ===== -->
+<section id="certifications">
+  <div class="section-tag reveal">🏆 Certifications</div>
+  <h2 class="section-title reveal">My <em>Credentials</em></h2>
+  <div class="cert-grid">
+    <div class="cert-card reveal">
+      <div class="cert-top">
+        <span class="cert-org">NPTEL · IIT Madras</span>
+        <span class="cert-date">Jul–Aug 2025</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-title">Design Thinking — A Primer</div>
+        <p class="cert-desc">Completed a 4-week NPTEL online certification focused on problem-solving, innovation process, empathy mapping, prototyping, and creative thinking. Assessed via online assignments (20.83/25) and proctored exam (30.63/75).</p>
+        <div class="cert-id">Roll No: NPTEL25MG106S446401934 · Score: 51%</div>
+      </div>
+    </div>
+    <div class="cert-card reveal reveal-delay-1">
+      <div class="cert-top">
+        <span class="cert-org">NASSCOM · FutureSkills Prime</span>
+        <span class="cert-date">04 Mar 2026</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-badge">🥇 GOLD — 80%</div>
+        <div class="cert-title">Digital 101 – 30 Hours</div>
+        <p class="cert-desc">Gold category certification (80% score) for Digital 101 by IT-ITeS Sector Skills Council NASSCOM. Covered foundational digital literacy, industry trends, and emerging technologies. Ministry of Electronics & IT, Government of India approved curriculum.</p>
+        <div class="cert-id">ID: FSP/2026/3/10258638 · M001: 84.38% | M002: 79.17% | M003: 75%</div>
+      </div>
+    </div>
+    <div class="cert-card reveal reveal-delay-2">
+      <div class="cert-top">
+        <span class="cert-org">NASSCOM · FutureSkills Prime</span>
+        <span class="cert-date">06 Feb 2026</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-title">Data Processing and Visualisation</div>
+        <p class="cert-desc">Completed course in Data Processing and Visualisation aligned to competency standards developed by IT-ITeS Sector Skills Council NASSCOM in collaboration with Industry and Government.</p>
+        <div class="cert-id">Issued: 06 February 2026</div>
+      </div>
+    </div>
+    <div class="cert-card reveal reveal-delay-1">
+      <div class="cert-top">
+        <span class="cert-org">Enthu-EdTech</span>
+        <span class="cert-date">Feb 2026</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-title">Industrial Training on IoT</div>
+        <p class="cert-desc">Successfully completed a Two-Day Industrial Training on Internet of Things (IoT) conducted from 9th to 10th February 2026 as a student of the ECE Department, Sona College of Technology.</p>
+        <div class="cert-id">Issued by Enthu-EdTech · Sona College of Technology</div>
+      </div>
+    </div>
+    <div class="cert-card reveal reveal-delay-2">
+      <div class="cert-top">
+        <span class="cert-org">VIT Vellore · SENSE</span>
+        <span class="cert-date">07 Mar 2026</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-title">Printed Bluetooth Antenna for IoT — National Workshop</div>
+        <p class="cert-desc">Participated in a One-Day National Workshop Programme on Design, Fabrication and Characterization of Printed Bluetooth Antenna for IoT Application at Department of Communication Engineering, School of Electronics Engineering, VIT Vellore.</p>
+        <div class="cert-id">No. VIT/SENSE/Workshop/2026/550XP0519073809</div>
+      </div>
+    </div>
+    <div class="cert-card reveal reveal-delay-3">
+      <div class="cert-top">
+        <span class="cert-org">AICTE · PRAGATI</span>
+        <span class="cert-date">2025</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-title">PRAGATI Internship for Women</div>
+        <p class="cert-desc">Completed courses and a certification course under the PRAGATI Internship programme designed for women in technical fields, enhancing professional and technical competencies.</p>
+        <div class="cert-id">AICTE PRAGATI Scholarship Programme</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ACHIEVEMENTS ===== -->
+<section id="achievements">
+  <div class="section-tag reveal">⭐ Achievements</div>
+  <h2 class="section-title reveal">Milestones & <em>Badges</em></h2>
+  <div class="achieve-grid">
+    <div class="achieve-card reveal">
+      <span class="achieve-icon">🏅</span>
+      <div class="achieve-title">ISMART 2026</div>
+      <div class="achieve-desc">Created and selected to present a new prototype on "Footstep Energy Generation" at the national innovation event ISMART 2026.</div>
+    </div>
+    <div class="achieve-card reveal reveal-delay-1">
+      <span class="achieve-icon">🥇</span>
+      <div class="achieve-title">Department Top 10</div>
+      <div class="achieve-desc">Scored among the top 10 students in the ECE department (2025) with a CGPA of 8.52 — a testament to consistent academic excellence.</div>
+    </div>
+    <div class="achieve-card reveal reveal-delay-2">
+      <span class="achieve-icon">🎓</span>
+      <div class="achieve-title">PRAGATI Internship</div>
+      <div class="achieve-desc">Completed courses under the PRAGATI Internship for Women, one of India's prestigious scholarship & internship programmes by AICTE.</div>
+    </div>
+    <div class="achieve-card reveal reveal-delay-3">
+      <span class="achieve-icon">⭐</span>
+      <div class="achieve-title">NASSCOM Gold — Digital 101</div>
+      <div class="achieve-desc">Achieved GOLD category (80% score) in the NASSCOM Digital 101 assessment — surpassing the 70% threshold for gold certification.</div>
+    </div>
+    <div class="achieve-card reveal">
+      <span class="achieve-icon">📡</span>
+      <div class="achieve-title">VIT National Workshop</div>
+      <div class="achieve-desc">Selected and participated in the prestigious One-Day National Workshop at VIT Vellore on Bluetooth Antenna design for IoT Applications.</div>
+    </div>
+    <div class="achieve-card reveal reveal-delay-1">
+      <span class="achieve-icon">🌐</span>
+      <div class="achieve-title">5 Certifications in 1 Year</div>
+      <div class="achieve-desc">Earned 5 industry-recognized certifications spanning IoT, Design Thinking, Data Science, and Digital Technologies within a single academic year.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CODING PROFILES ===== -->
+<section id="profiles">
+  <div class="section-tag reveal">💻 Online Presence</div>
+  <h2 class="section-title reveal">Find Me <em>Online</em></h2>
+  <div class="profiles-grid">
+    <a href="https://github.com/subaleghasri21-cloud" target="_blank" class="profile-card reveal">
+      <span class="profile-icon">⌨</span>
+      <div class="profile-name">GitHub</div>
+      <div class="profile-handle">subaleghasri21-cloud</div>
+      <p class="profile-desc">Code repositories, projects and open-source contributions in electronics and software engineering.</p>
+      <span class="profile-btn">Visit Profile →</span>
+    </a>
+    <a href="https://www.linkedin.com/in/subaleghasri-m-2b4771358" target="_blank" class="profile-card reveal reveal-delay-1">
+      <span class="profile-icon">🔗</span>
+      <div class="profile-name">LinkedIn</div>
+      <div class="profile-handle">subaleghasri-m-2b4771358</div>
+      <p class="profile-desc">Professional network, certifications, achievements, and career updates from my engineering journey.</p>
+      <span class="profile-btn">Connect →</span>
+    </a>
+    <a href="https://leetcode.com/u/Subaleghasri_06/" target="_blank" class="profile-card reveal reveal-delay-2">
+      <span class="profile-icon">🧩</span>
+      <div class="profile-name">LeetCode</div>
+      <div class="profile-handle">Subaleghasri_06</div>
+      <p class="profile-desc">Sharpening problem-solving skills through algorithmic challenges, data structures, and competitive programming.</p>
+      <span class="profile-btn">View Solutions →</span>
+    </a>
+    <a href="https://www.hackerrank.com/profile/subaleghasri21" target="_blank" class="profile-card reveal reveal-delay-3">
+      <span class="profile-icon">🏆</span>
+      <div class="profile-name">HackerRank</div>
+      <div class="profile-handle">subaleghasri21</div>
+      <p class="profile-desc">Coding challenges and assessments in Python, algorithms, and data structures on HackerRank platform.</p>
+      <span class="profile-btn">View Profile →</span>
+    </a>
+  </div>
+</section>
+
+<!-- ===== CONTACT — WINTER ===== -->
+<section id="contact">
+  <div id="winter-particles"></div>
+  <div class="section-tag reveal">❄ Winter · The Future</div>
+  <h2 class="section-title reveal">Let's <em>Connect</em></h2>
+  <div class="contact-grid">
+    <div>
+      <p class="contact-intro reveal">Ready to collaborate, intern, or build something meaningful together?</p>
+      <div class="contact-links">
+        <a href="mailto:subaleghasri21@gmail.com" class="contact-link reveal">
+          <span class="contact-link-icon">📧</span>
+          <div class="contact-link-info">
+            <div class="contact-link-type">Email</div>
+            <div class="contact-link-val">subaleghasri21@gmail.com</div>
+          </div>
+        </a>
+        <a href="tel:+919626605765" class="contact-link reveal reveal-delay-1">
+          <span class="contact-link-icon">📱</span>
+          <div class="contact-link-info">
+            <div class="contact-link-type">Phone</div>
+            <div class="contact-link-val">+91 9626605765</div>
+          </div>
+        </a>
+        <a href="https://www.linkedin.com/in/subaleghasri-m-2b4771358" target="_blank" class="contact-link reveal reveal-delay-2">
+          <span class="contact-link-icon">🔗</span>
+          <div class="contact-link-info">
+            <div class="contact-link-type">LinkedIn</div>
+            <div class="contact-link-val">subaleghasri-m-2b4771358</div>
+          </div>
+        </a>
+        <a href="https://github.com/subaleghasri21-cloud" target="_blank" class="contact-link reveal reveal-delay-3">
+          <span class="contact-link-icon">⌨</span>
+          <div class="contact-link-info">
+            <div class="contact-link-type">GitHub</div>
+            <div class="contact-link-val">subaleghasri21-cloud</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="contact-right reveal reveal-delay-2">
+      <div class="contact-big-name">Sub<br>ale<br>gha<br>sri</div>
+      <div class="winter-tagline">"Every circuit, every line of code<br>is a step toward tomorrow."</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Subaleghasri M · Crafted with ❤ · ECE · Sona College of Technology</p>
+</footer>
+
+<script>
+// ===================== CURSOR =====================
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursor-trail');
+let mx=window.innerWidth/2, my=window.innerHeight/2;
+let tx=mx, ty=my;
+
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=(mx-6)+'px';
+  cursor.style.top=(my-6)+'px';
+});
+setInterval(()=>{
+  tx+=(mx-tx)*0.15; ty+=(my-ty)*0.15;
+  trail.style.left=(tx-20)+'px';
+  trail.style.top=(ty-20)+'px';
+},16);
+
+document.querySelectorAll('a,button,.btn,.know-node,.achieve-card,.profile-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2.5)';trail.style.transform='scale(0.6)'});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';trail.style.transform='scale(1)'});
+});
+
+// ===================== LOADER =====================
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const loader=document.getElementById('loader');
+    loader.style.opacity='0';
+    setTimeout(()=>loader.style.display='none',1000);
+  },2200);
+});
+
+// ===================== HERO TYPING =====================
+const phrases = [
+  'Electronics & Communication Engineer',
+  'IoT Enthusiast & Innovator',
+  'Data Science Explorer',
+  'Design Thinker & Problem Solver',
+  'Future Tech Professional'
+];
+let pi=0,ci=0,del=false;
+const heroType=document.getElementById('heroType');
+function type(){
+  const ph=phrases[pi];
+  if(!del){
+    heroType.innerHTML=ph.slice(0,ci+1)+'<span class="cursor-blink"></span>';
+    ci++;
+    if(ci===ph.length){del=true;setTimeout(type,1800);return}
+  } else {
+    heroType.innerHTML=ph.slice(0,ci-1)+'<span class="cursor-blink"></span>';
+    ci--;
+    if(ci===0){del=false;pi=(pi+1)%phrases.length}
+  }
+  setTimeout(type,del?50:80);
+}
+setTimeout(type,2600);
+
+// ===================== SEASON DETECTION =====================
+const sections={
+  hero:'spring',about:'spring',
+  skills:'summer',knowledge:'summer',
+  projects:'autumn',academic:'autumn',journey:'autumn',
+  certifications:'autumn',achievements:'autumn',
+  profiles:'winter',contact:'winter'
+};
+const seasonColors={
+  spring:'#7ec8a4',summer:'#ffd700',autumn:'#f4a460',winter:'#88aacc'
+};
+
+function setSeason(s){
+  document.body.className='season-'+s;
+  const c=seasonColors[s];
+  document.documentElement.style.setProperty('--season-color',c);
+  cursor.style.background=c;
+  trail.style.borderColor=c;
+  document.querySelector('.season-dot').style.background=c;
+  // Update skill fills color
+  document.querySelectorAll('.skill-fill').forEach(f=>f.style.background=c);
+}
+
+// ===================== INTERSECTION OBSERVER =====================
+const revealEls=document.querySelectorAll('.reveal');
+const revealObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // Animate stat counters
+      if(e.target.querySelector('[data-count]')){
+        e.target.querySelectorAll('[data-count]').forEach(el=>animateCount(el));
+      }
+      // Animate skill bars
+      if(e.target.classList.contains('skill-category')||e.target.closest('.skill-category')){
+        animateBars();
+      }
+    }
+  });
+},{threshold:0.15});
+revealEls.forEach(el=>revealObs.observe(el));
+
+// Bar animation triggered on scroll into view
+const barObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)animateBars()});
+},{threshold:0.3});
+document.querySelectorAll('.skill-category').forEach(el=>barObs.observe(el));
+
+function animateBars(){
+  document.querySelectorAll('.skill-fill').forEach(bar=>{
+    const w=bar.getAttribute('data-width');
+    if(w) bar.style.width=w+'%';
+  });
+}
+
+// Section season detection
+const sectionObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id=e.target.id;
+      const s=sections[id];
+      if(s) setSeason(s);
+    }
+  });
+},{threshold:0.3});
+Object.keys(sections).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) sectionObs.observe(el);
+});
+
+// ===================== SCROLL PROGRESS =====================
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  const p=window.scrollY/h;
+  document.getElementById('season-bar').style.transform=`scaleX(${p})`;
+});
+
+// ===================== COUNTER ANIMATION =====================
+function animateCount(el){
+  const target=parseFloat(el.getAttribute('data-count'));
+  const dec=target%1!==0;
+  let current=0;
+  const dur=1500,step=16;
+  const inc=target/(dur/step);
+  const timer=setInterval(()=>{
+    current=Math.min(current+inc,target);
+    el.textContent=dec?current.toFixed(2):Math.round(current);
+    if(current>=target)clearInterval(timer);
+  },step);
+}
+
+// ===================== BACKGROUND CANVAS =====================
+const bgCanvas=document.getElementById('bg-canvas');
+const bgCtx=bgCanvas.getContext('2d');
+let bgW,bgH;
+const bgParticles=[];
+function resizeBg(){bgW=bgCanvas.width=window.innerWidth;bgH=bgCanvas.height=window.innerHeight}
+resizeBg();window.addEventListener('resize',resizeBg);
+for(let i=0;i<80;i++){
+  bgParticles.push({
+    x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,
+    r:Math.random()*1.5+0.5,
+    vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,
+    o:Math.random()*0.5+0.1
+  });
+}
+function drawBg(){
+  bgCtx.clearRect(0,0,bgW,bgH);
+  const sc=getComputedStyle(document.documentElement).getPropertyValue('--season-color').trim();
+  bgParticles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=bgW;if(p.x>bgW)p.x=0;
+    if(p.y<0)p.y=bgH;if(p.y>bgH)p.y=0;
+    bgCtx.beginPath();bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    bgCtx.fillStyle=sc;bgCtx.globalAlpha=p.o;bgCtx.fill();bgCtx.globalAlpha=1;
+  });
+  // Draw connections
+  bgCtx.globalAlpha=0.08;
+  for(let i=0;i<bgParticles.length;i++){
+    for(let j=i+1;j<bgParticles.length;j++){
+      const dx=bgParticles[i].x-bgParticles[j].x;
+      const dy=bgParticles[i].y-bgParticles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        bgCtx.beginPath();
+        bgCtx.moveTo(bgParticles[i].x,bgParticles[i].y);
+        bgCtx.lineTo(bgParticles[j].x,bgParticles[j].y);
+        bgCtx.strokeStyle=sc;bgCtx.lineWidth=0.5;bgCtx.stroke();
+      }
+    }
+  }
+  bgCtx.globalAlpha=1;
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// ===================== CONSTELLATION =====================
+const ccCanvas=document.getElementById('constellation-canvas');
+const ccCtx=ccCanvas.getContext('2d');
+const nodes=[
+  {label:'Programming',x:0,y:0,connections:[1,2,9]},
+  {label:'Data Structures',x:0,y:0,connections:[0,2,11]},
+  {label:'DBMS',x:0,y:0,connections:[0,1,3]},
+  {label:'Networking',x:0,y:0,connections:[2,4,6]},
+  {label:'Digital Comm',x:0,y:0,connections:[3,5,7]},
+  {label:'Signal Processing',x:0,y:0,connections:[4,6,7]},
+  {label:'Electronics',x:0,y:0,connections:[5,7,8]},
+  {label:'Embedded Systems',x:0,y:0,connections:[4,5,6,8]},
+  {label:'IoT',x:0,y:0,connections:[7,3,9]},
+  {label:'Design Thinking',x:0,y:0,connections:[0,8,10]},
+  {label:'Data Viz',x:0,y:0,connections:[9,11,0]},
+  {label:'Problem Solving',x:0,y:0,connections:[10,1,0]},
+];
+let ccAngle=0;
+function positionNodes(){
+  const cx=ccCanvas.width/2, cy=ccCanvas.height/2;
+  const r1=Math.min(ccCanvas.width,ccCanvas.height)*0.35;
+  const r2=r1*0.55;
+  nodes.forEach((n,i)=>{
+    if(i<8){
+      const a=(i/8)*Math.PI*2+ccAngle;
+      n.x=cx+Math.cos(a)*r1;n.y=cy+Math.sin(a)*r1;
+    } else {
+      const a=((i-8)/4)*Math.PI*2-ccAngle*1.5;
+      n.x=cx+Math.cos(a)*r2;n.y=cy+Math.sin(a)*r2;
+    }
+  });
+}
+function drawConst(){
+  const sc=getComputedStyle(document.documentElement).getPropertyValue('--season-color').trim();
+  ccCanvas.width=ccCanvas.parentElement.clientWidth||900;
+  ccCanvas.height=500;
+  ccCtx.clearRect(0,0,ccCanvas.width,ccCanvas.height);
+  ccCtx.fillStyle='rgba(5,8,16,0.98)';ccCtx.fillRect(0,0,ccCanvas.width,ccCanvas.height);
+  positionNodes();
+  // Connections
+  nodes.forEach((n,i)=>{
+    n.connections.forEach(j=>{
+      if(j>i){
+        ccCtx.beginPath();ccCtx.moveTo(n.x,n.y);ccCtx.lineTo(nodes[j].x,nodes[j].y);
+        ccCtx.strokeStyle=sc;ccCtx.globalAlpha=0.2;ccCtx.lineWidth=1;ccCtx.stroke();
+        ccCtx.globalAlpha=1;
+      }
+    });
+  });
+  // Nodes
+  nodes.forEach(n=>{
+    const grad=ccCtx.createRadialGradient(n.x,n.y,0,n.x,n.y,12);
+    grad.addColorStop(0,sc);grad.addColorStop(1,'transparent');
+    ccCtx.beginPath();ccCtx.arc(n.x,n.y,12,0,Math.PI*2);
+    ccCtx.fillStyle=grad;ccCtx.fill();
+    ccCtx.beginPath();ccCtx.arc(n.x,n.y,4,0,Math.PI*2);
+    ccCtx.fillStyle=sc;ccCtx.fill();
+    ccCtx.fillStyle='rgba(232,234,240,0.9)';ccCtx.font='11px Syne,sans-serif';
+    ccCtx.textAlign='center';ccCtx.fillText(n.label,n.x,n.y-18);
+  });
+  ccAngle+=0.003;
+  requestAnimationFrame(drawConst);
+}
+drawConst();
+
+// ===================== SEASON PARTICLES =====================
+function createPetals(container){
+  for(let i=0;i<15;i++){
+    const p=document.createElement('div');
+    p.className='petal';
+    const size=6+Math.random()*10;
+    p.style.cssText=`
+      width:${size}px;height:${size}px;
+      background:hsl(${330+Math.random()*30},70%,${70+Math.random()*20}%);
+      left:${Math.random()*100}%;
+      animation-duration:${6+Math.random()*8}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:0.7;
+    `;
+    container.appendChild(p);
+  }
+}
+function createLeaves(container){
+  const emojis=['🍂','🍁','🌿'];
+  for(let i=0;i<12;i++){
+    const l=document.createElement('div');
+    l.className='leaf';
+    l.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    l.style.cssText=`
+      left:${Math.random()*100}%;
+      font-size:${10+Math.random()*14}px;
+      animation-duration:${7+Math.random()*6}s;
+      animation-delay:${Math.random()*8}s;
+    `;
+    container.appendChild(l);
+  }
+}
+function createSunRays(container){
+  for(let i=0;i<8;i++){
+    const r=document.createElement('div');
+    r.className='sunray';
+    const a=(i/8)*360;
+    const l=200+Math.random()*300;
+    r.style.cssText=`
+      width:2px;height:${l}px;
+      top:${-l}px;left:${Math.random()*100}%;
+      transform:rotate(${a}deg);
+      animation-duration:${3+Math.random()*4}s;
+      animation-delay:${Math.random()*4}s;
+    `;
+    container.appendChild(r);
+  }
+}
+function createSnow(container){
+  const flakes=['❄','❅','❆','·'];
+  for(let i=0;i<20;i++){
+    const s=document.createElement('div');
+    s.className='snowflake';
+    s.textContent=flakes[Math.floor(Math.random()*flakes.length)];
+    s.style.cssText=`
+      left:${Math.random()*100}%;
+      font-size:${8+Math.random()*14}px;
+      animation-duration:${8+Math.random()*10}s;
+      animation-delay:${Math.random()*12}s;
+    `;
+    container.appendChild(s);
+  }
+}
+
+createPetals(document.getElementById('spring-particles'));
+createSunRays(document.getElementById('summer-particles'));
+createLeaves(document.getElementById('autumn-particles'));
+createSnow(document.getElementById('winter-particles'));
+
+// ===================== HAMBURGER =====================
+const hamburger=document.getElementById('hamburger');
+const navLinks=document.getElementById('navLinks');
+hamburger.addEventListener('click',()=>{navLinks.classList.toggle('open')});
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+
+// ===================== SMOOTH NAV HIGHLIGHT =====================
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('navbar');
+  nav.style.background=window.scrollY>50?'rgba(5,8,16,0.95)':'rgba(5,8,16,0.8)';
+},{ passive:true });
+
+// ===================== STAT COUNTER ON VISIBLE =====================
+const statObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('[data-count]').forEach(el=>animateCount(el));
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('.about-stats').forEach(el=>statObs.observe(el));
+
+</script>
+</body>
+</html>
